@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<opencv_storage>
+<NoCol>
+  <ymax>255</ymax>
+  <umax>140</umax>
+  <vmax>140</vmax>
+  <ymin>0</ymin>
+  <umin>120</umin>
+  <vmin>120</vmin></NoCol>
+<Laranja>
+  <ymax>152</ymax>
+  <umax>133</umax>
+  <vmax>255</vmax>
+  <ymin>87</ymin>
+  <umin>0</umin>
+  <vmin>198</vmin></Laranja>
+<Azul>
+  <ymax>62</ymax>
+  <umax>174</umax>
+  <vmax>123</vmax>
+  <ymin>0</ymin>
+  <umin>153</umin>
+  <vmin>92</vmin></Azul>
+<Amarelo>
+  <ymax>176</ymax>
+  <umax>101</umax>
+  <vmax>177</vmax>
+  <ymin>83</ymin>
+  <umin>77</umin>
+  <vmin>130</vmin></Amarelo>
+<Vermelho>
+  <ymax>75</ymax>
+  <umax>129</umax>
+  <vmax>205</vmax>
+  <ymin>24</ymin>
+  <umin>111</umin>
+  <vmin>178</vmin></Vermelho>
+<Verde>
+  <ymax>85</ymax>
+  <umax>141</umax>
+  <vmax>109</vmax>
+  <ymin>58</ymin>
+  <umin>100</umin>
+  <vmin>82</vmin></Verde>
+<Rosa>
+  <ymax>255</ymax>
+  <umax>174</umax>
+  <vmax>247</vmax>
+  <ymin>127</ymin>
+  <umin>112</umin>
+  <vmin>147</vmin></Rosa>
+<AzulClaro>
+  <ymax>173</ymax>
+  <umax>184</umax>
+  <vmax>152</vmax>
+  <ymin>104</ymin>
+  <umin>135</umin>
+  <vmin>71</vmin></AzulClaro>
+<Roxo>
+  <ymax>7</ymax>
+  <umax>1</umax>
+  <vmax>3</vmax>
+  <ymin>3</ymin>
+  <umin>1</umin>
+  <vmin>1</vmin></Roxo>
+<Marrom>
+  <ymax>79</ymax>
+  <umax>141</umax>
+  <vmax>170</vmax>
+  <ymin>50</ymin>
+  <umin>108</umin>
+  <vmin>133</vmin></Marrom>
+</opencv_storage>
