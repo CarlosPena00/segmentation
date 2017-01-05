@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     updateTimer = new QTimer();
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAndDraw()));
     updateTimer->start(30);
-    cvision = new Cvision(0);
+    cvision = new Cvision(carlos);
     int width = ui->labelDisplay->width();
     int height = ui->labelDisplay->height();
     this->maxPosition = QPoint(width,height);

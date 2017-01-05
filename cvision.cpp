@@ -85,12 +85,19 @@ int Cvision::vectorDist(YUV p)
    double minDist = 999999999;
 
     for(int i = 0 ; i < MAXCOLOR ; i++){
-        p.dist[i] = surfaceDistance(p, color[i]);
 
-        if(minDist > p.dist[i]){
-            minDist = p.dist[i];
+        if(isInside(p,color[i])){
+            minDist = 0;
             finalIndex = i;
+            p.dist[i] = 0;
+        }else{
+            p.dist[i] = surfaceDistance(p, color[i]);
+            if(minDist > p.dist[i]){
+                minDist = p.dist[i];
+                finalIndex = i;
+            }
         }
+
     }
 
 
