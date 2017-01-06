@@ -36,16 +36,19 @@ class Cvision
 public:
     RGB* YUVtoRGB(YUV p);
     YUV* RGBtoYUV(RGB p);
-    YUV* BGRtoYUV(cv::Vec3b p);
+    void BGRtoYUV(cv::Vec3b p, int *y, int *u, int *v);
+    void RGBtoYUV(cv::Vec3b p, int *y, int *u, int *v);
     Cvision(int index);
     Cvision(std::string);
     void setup();
     void getYUV();
     void getNormalFrame(cv::Mat &src, cv::Mat &dst);
+    void getBrutalFrame(cv::Mat &src, cv::Mat &dst);
     void getFrame(cv::Mat &frame);
     void getFrame();
     bool isInside(YUV p, Color q);
     int brutalForce(QColor p);
+    int brutalForce(cv::Vec3b p);
     int normalForce(QColor p);
     int normalForce(YUV px);
     double surfaceDistance(YUV p, Color q);

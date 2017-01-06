@@ -49,6 +49,7 @@ private:
     Ui::MainWindow *ui;
     cv::Mat src;
     cv::Mat dst;
+    cv::Mat brutalForce;
     Cvision *cvision;
     QPoint position;
     QPoint pos;

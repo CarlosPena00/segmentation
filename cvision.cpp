@@ -20,15 +20,23 @@ YUV *Cvision::RGBtoYUV(RGB p)
     return var;
 }
 
-YUV *Cvision::BGRtoYUV(cv::Vec3b p)
+void Cvision::BGRtoYUV(cv::Vec3b p, int *y, int *u, int *v)
 {
-    YUV* var = new YUV;
 
-    var->y = (299*p.val[2] + 587*p.val[1] + 114*p.val[0] + 500)/1000;
-    var->u = (492 * (p.val[0] - var->y) + 128000)/1000;
-    var->v = (877 * (p.val[2] - var->y) + 128000)/1000;
 
-    return var;
+    *y = (299*p.val[2] + 587*p.val[1] + 114*p.val[0] + 500)/1000;
+    *u = (492 * (p.val[0] - *y) + 128000)/1000;
+    *v = (877 * (p.val[2] - *y) + 128000)/1000;
+
+
+}
+
+
+void Cvision::RGBtoYUV(cv::Vec3b p, int *y, int *u, int *v)
+{
+    *y = (299*p.val[0] + 587*p.val[1] + 114*p.val[2] + 500)/1000;
+    *u = (492 * (p.val[2] - *y) + 128000)/1000;
+    *v = (877 * (p.val[0] - *y) + 128000)/1000;
 }
 
 Cvision::Cvision(int index)
@@ -89,7 +97,7 @@ void Cvision::getFrame()
 {
 
     cam>>src2;
-    cv::imshow("Ola",src2);
+
 
 }
 
@@ -111,6 +119,13 @@ int Cvision::brutalForce(QColor p)
     var.B = p.blue();
     YUV *px;
     px = RGBtoYUV(var);
+    return vectorDist(px[0]);
+}
+
+int Cvision::brutalForce(cv::Vec3b p)
+{
+    YUV px[1];
+    RGBtoYUV(p,&px[0].y,&px[0].u,&px[0].v);
     return vectorDist(px[0]);
 }
 
@@ -289,15 +304,36 @@ void Cvision::getNormalFrame(cv::Mat &src, cv::Mat &dst)
 {
     int cols = src.cols;
     int rows = src.rows;
-    cv::Vec3b tempvar;YUV *var;
-    for(int j = 0 ; j < rows ; ++j){
-        for(int i = 0 ; i < cols ; ++i){
+    cv::Vec3b tempvar;YUV var;
+    for(int j = 0 ; j < rows ; ++j)
+    {
+        for(int i = 0 ; i < cols ; ++i)
+        {
             tempvar = src.at<cv::Vec3b>(j,i);
-            var = BGRtoYUV(tempvar);
-            dst.at<cv::Vec3b>(j,i) = this->cor[normalForce(var[0])];
+            BGRtoYUV(tempvar,&var.y,&var.u,&var.v);
+            //std::cout<<"( "<<var.y<<" "<<var.u<<" "<<var.v<<" )"<<std::endl;
+            dst.at<cv::Vec3b>(j,i) = this->cor[normalForce(var)];
 
         }
     }
 
+}
 
+void Cvision::getBrutalFrame(cv::Mat &src, cv::Mat &dst)
+{
+    int cols = src.cols;
+    int rows = src.rows;
+    cv::Vec3b tempvar;YUV var;
+    for(int j = 0 ; j < rows ; ++j)
+    {
+        for(int i = 0 ; i < cols ; ++i)
+        {
+            tempvar = src.at<cv::Vec3b>(j,i);
+            if(tempvar != cv::Vec3b(0,0,0)){
+                dst.at<cv::Vec3b>(j,i) = this->cor[brutalForce(tempvar)];
+
+
+            }
+        }
+    }
 }

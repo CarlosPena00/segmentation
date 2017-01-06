@@ -63,7 +63,7 @@ void MainWindow::displayShowNormal(cv::Mat &frame)
 {
     cv::Size newSize(this->ui->labelDisplayNormal->width(), this->ui->labelDisplayNormal->height());
     cv::resize(frame, frame, newSize);
-    cv::cvtColor(frame, frame, CV_BGR2RGB);
+    //cv::cvtColor(frame, frame, CV_BGR2RGB);
     QImage qimg((uchar*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
     this->ui->labelDisplayNormal->setPixmap(QPixmap::fromImage(qimg));
 
@@ -237,9 +237,10 @@ void MainWindow::updateAndDraw(){
     int brutalF = cvision->brutalForce(rgb);
     displayChooseOneBrutalF(brutalF);
     int normalF = cvision->normalForce(rgb);
-   // displayChooseOneNormalF(normalF);
+    displayChooseOneNormalF(normalF);
+    displayShowNormal(dst);
+    dst.copyTo(brutalForce);
 
-    //displayShowNormal(dst);
 
 
 }
