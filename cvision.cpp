@@ -331,8 +331,6 @@ void Cvision::getBrutalFrame(cv::Mat &src, cv::Mat &dst)
             tempvar = src.at<cv::Vec3b>(j,i);
             if(tempvar != cv::Vec3b(0,0,0)){
                 dst.at<cv::Vec3b>(j,i) = this->cor[brutalForce(tempvar)];
-
-
             }
         }
     }

@@ -31,6 +31,7 @@ public:
     ~MainWindow();
     QColor displayShow(cv::Mat &frame, QPoint p);
     void displayShowNormal(cv::Mat &frame);
+    void displayShowBrutal(cv::Mat &frame);
     void displayCte();
 
     QPoint getPosition();

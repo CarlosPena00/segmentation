@@ -69,6 +69,15 @@ void MainWindow::displayShowNormal(cv::Mat &frame)
 
 }
 
+void MainWindow::displayShowBrutal(cv::Mat &frame)
+{
+    cv::Size newSize(this->ui->labelDisplayBrutal->width(), this->ui->labelDisplayBrutal->height());
+    cv::resize(frame, frame, newSize);
+    //cv::cvtColor(frame, frame, CV_BGR2RGB);
+    QImage qimg((uchar*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    this->ui->labelDisplayBrutal->setPixmap(QPixmap::fromImage(qimg));
+}
+
 void MainWindow::displayCte()
 {
     paletteTag[0].setColor( backgroundRole(), cor[0]  );
@@ -229,7 +238,9 @@ double MainWindow::distanceEucledian(QColor p, QColor q)
 void MainWindow::updateAndDraw(){
     cvision->getFrame(src);
     cvision->getFrame(dst);
+
     cvision->getNormalFrame(src,dst);
+    dst.copyTo(brutalForce);
     this->pos = getPosition();
     rgb = displayShow(src,this->pos);
     displayCte();
@@ -239,8 +250,8 @@ void MainWindow::updateAndDraw(){
     int normalF = cvision->normalForce(rgb);
     displayChooseOneNormalF(normalF);
     displayShowNormal(dst);
-    dst.copyTo(brutalForce);
 
-
+    cvision->getBrutalFrame(brutalForce,brutalForce);
+    displayShowBrutal(brutalForce);
 
 }
