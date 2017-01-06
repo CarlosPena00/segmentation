@@ -36,13 +36,18 @@ class Cvision
 public:
     RGB* YUVtoRGB(YUV p);
     YUV* RGBtoYUV(RGB p);
+    YUV* BGRtoYUV(cv::Vec3b p);
     Cvision(int index);
     Cvision(std::string);
     void setup();
     void getYUV();
+    void getNormalFrame(cv::Mat &src, cv::Mat &dst);
     void getFrame(cv::Mat &frame);
     void getFrame();
     bool isInside(YUV p, Color q);
+    int brutalForce(QColor p);
+    int normalForce(QColor p);
+    int normalForce(YUV px);
     double surfaceDistance(YUV p, Color q);
     double planDistance(int minPlano, int maxPlano);
     double absDistance(YUV p, YUV q);
@@ -53,6 +58,7 @@ private:
     std::string carlos="/home/kaka/Desktop/RC/video4.avi";
     std::string xml   ="/home/kaka/Desktop/Knn/SegKnn.xml";
     std::string colorName[20];
+    cv::Vec3b cor[20];
     cv::VideoCapture cam;
     cv::Mat src;
     cv::Mat src2;

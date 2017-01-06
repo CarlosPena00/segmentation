@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(updateTimer, SIGNAL(timeout()), this, SLOT(updateAndDraw()));
     updateTimer->start(30);
     cvision = new Cvision(carlos);
+    cvision->getFrame(dst);
     int width = ui->labelDisplay->width();
     int height = ui->labelDisplay->height();
     this->maxPosition = QPoint(width,height);
@@ -55,6 +56,16 @@ QColor MainWindow::displayShow(cv::Mat &frame, QPoint p)
 
 
     return myrgb;
+
+}
+
+void MainWindow::displayShowNormal(cv::Mat &frame)
+{
+    cv::Size newSize(this->ui->labelDisplayNormal->width(), this->ui->labelDisplayNormal->height());
+    cv::resize(frame, frame, newSize);
+    cv::cvtColor(frame, frame, CV_BGR2RGB);
+    QImage qimg((uchar*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    this->ui->labelDisplayNormal->setPixmap(QPixmap::fromImage(qimg));
 
 }
 
@@ -113,6 +124,17 @@ void MainWindow::displayChooseOneBrutalF(int color)
     ui->label_PredictRGBBrutalF->setText(QString("( ") + QString::number(cor[color].red()) + QString(" ; ")+
                                      QString::number(cor[color].green()) + QString(" ; ")
                                      + QString::number(cor[color].blue()) + QString(" )"));
+
+}
+
+void MainWindow::displayChooseOneNormalF(int color)
+{
+    paletteChoose[3].setColor(backgroundRole(),cor[color]);
+    ui->framecolorPredict_4->setPalette(paletteChoose[3]);
+    ui->framecolorPredict_4->setAutoFillBackground(true);
+    ui->label_PredictRGBNormalF->setText(QString("( ") + QString::number(cor[color].red()) + QString(" ; ")+
+                                         QString::number(cor[color].green()) + QString(" ; ")
+                                         + QString::number(cor[color].blue()) + QString(" )"));
 
 }
 
@@ -206,10 +228,18 @@ double MainWindow::distanceEucledian(QColor p, QColor q)
 
 void MainWindow::updateAndDraw(){
     cvision->getFrame(src);
+    cvision->getFrame(dst);
+    cvision->getNormalFrame(src,dst);
     this->pos = getPosition();
     rgb = displayShow(src,this->pos);
     displayCte();
     vectorDistance(rgb, colorDist);
-    int brutalF = cvision->debug(rgb);
+    int brutalF = cvision->brutalForce(rgb);
     displayChooseOneBrutalF(brutalF);
+    int normalF = cvision->normalForce(rgb);
+   // displayChooseOneNormalF(normalF);
+
+    //displayShowNormal(dst);
+
+
 }

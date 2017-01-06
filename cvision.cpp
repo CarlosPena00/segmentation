@@ -20,6 +20,17 @@ YUV *Cvision::RGBtoYUV(RGB p)
     return var;
 }
 
+YUV *Cvision::BGRtoYUV(cv::Vec3b p)
+{
+    YUV* var = new YUV;
+
+    var->y = (299*p.val[2] + 587*p.val[1] + 114*p.val[0] + 500)/1000;
+    var->u = (492 * (p.val[0] - var->y) + 128000)/1000;
+    var->v = (877 * (p.val[2] - var->y) + 128000)/1000;
+
+    return var;
+}
+
 Cvision::Cvision(int index)
 {
     cam.open(index);
@@ -46,6 +57,18 @@ void Cvision::setup()
     colorName[7] = "AzulClaro";
     colorName[8] = "Roxo";
     colorName[9] = "Marrom";
+    this->cor[0] = cv::Vec3b(255,255,255);
+    this->cor[1] = cv::Vec3b(255,165,0);
+    this->cor[2] = cv::Vec3b(0,0,255);
+    this->cor[3] = cv::Vec3b(255,255,0);
+    this->cor[4] = cv::Vec3b(255,0,0);
+    this->cor[5] = cv::Vec3b(0,255,0);
+    this->cor[6] = cv::Vec3b(255,0,255);
+    this->cor[7] = cv::Vec3b(100,100,250);
+    this->cor[8] = cv::Vec3b(138,043,226);
+    this->cor[9] = cv::Vec3b(107,66,38);
+    this->cor[10] = cv::Vec3b(255,255,255);
+
     getYUV();
 
 }
@@ -77,6 +100,50 @@ bool Cvision::isInside(YUV p, Color q)
             if(p.y <= q.max.y && p.u <= q.max.u && p.v <= q.max.v)return true;
 
     return false;
+
+}
+
+int Cvision::brutalForce(QColor p)
+{
+    RGB var;
+    var.R = p.red();
+    var.G = p.green();
+    var.B = p.blue();
+    YUV *px;
+    px = RGBtoYUV(var);
+    return vectorDist(px[0]);
+}
+
+int Cvision::normalForce(QColor p)
+{
+    RGB var;
+    var.R = p.red();
+    var.G = p.green();
+    var.B = p.blue();
+    int finalIndex = 0;
+    YUV *px;
+    px = RGBtoYUV(var);
+
+    for(int i = 0 ; i < MAXCOLOR ; i++){
+        if(isInside(px[0],color[i])){
+            finalIndex = i;
+            px[0].dist[i] = 0;
+        }
+    }
+    return finalIndex;
+}
+
+int Cvision::normalForce(YUV px)
+{
+    int finalIndex = 0;
+    for(int i = 0 ; i < MAXCOLOR ; i++){
+        if(isInside(px,color[i])){
+            finalIndex = i;
+            px.dist[i] = 0;
+        }
+    }
+
+    return finalIndex;
 
 }
 int Cvision::vectorDist(YUV p)
@@ -215,5 +282,22 @@ void Cvision::getYUV()
     }
 
     fs.release();
+
+}
+
+void Cvision::getNormalFrame(cv::Mat &src, cv::Mat &dst)
+{
+    int cols = src.cols;
+    int rows = src.rows;
+    cv::Vec3b tempvar;YUV *var;
+    for(int j = 0 ; j < rows ; ++j){
+        for(int i = 0 ; i < cols ; ++i){
+            tempvar = src.at<cv::Vec3b>(j,i);
+            var = BGRtoYUV(tempvar);
+            dst.at<cv::Vec3b>(j,i) = this->cor[normalForce(var[0])];
+
+        }
+    }
+
 
 }
