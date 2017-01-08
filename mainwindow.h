@@ -41,13 +41,18 @@ public:
     void displayChooseOneNormalF(int color);
     double distanceAbs(QColor p, QColor q);
     double distanceEucledian(QColor p, QColor q);
+    void getLimiar(int *value);
 
 
     void displayChooseOneEuclidean(int color);
+private slots:
+    void on_verticalSlider_valueChanged(int value);
+
 private:
     std::string carlos  ="/home/kaka/Desktop/RC/video4.avi";
 
     Ui::MainWindow *ui;
+    cv::Mat defaultDisplay,normalDisplay,brutalDisplay;
     cv::Mat src;
     cv::Mat dst;
     cv::Mat brutalForce;
@@ -60,6 +65,7 @@ private:
     QColor cor[11];
     QColor rgb;
     ColorDist* colorDist;
+    int limiar = 500;
 
 };
 

@@ -101,6 +101,11 @@ void Cvision::getFrame()
 
 }
 
+void Cvision::setLimiar(int value)
+{
+    this->limiar = value;
+}
+
 bool Cvision::isInside(YUV p, Color q)
 {
 
@@ -125,7 +130,7 @@ int Cvision::brutalForce(QColor p)
 int Cvision::brutalForce(cv::Vec3b p)
 {
     YUV px[1];
-    RGBtoYUV(p,&px[0].y,&px[0].u,&px[0].v);
+    BGRtoYUV(p,&px[0].y,&px[0].u,&px[0].v);
     return vectorDist(px[0]);
 }
 
@@ -180,8 +185,8 @@ int Cvision::vectorDist(YUV p)
             }
         }
 
-    }
 
+    }
 
 
     return finalIndex;
@@ -301,7 +306,7 @@ void Cvision::getYUV()
 }
 
 void Cvision::getNormalFrame(cv::Mat &src, cv::Mat &dst)
-{
+{// SRC = BGR  -> YUV
     int cols = src.cols;
     int rows = src.rows;
     cv::Vec3b tempvar;YUV var;
@@ -323,7 +328,7 @@ void Cvision::getBrutalFrame(cv::Mat &src, cv::Mat &dst)
 {
     int cols = src.cols;
     int rows = src.rows;
-    cv::Vec3b tempvar;YUV var;
+    cv::Vec3b tempvar;int var;
     for(int j = 0 ; j < rows ; ++j)
     {
         for(int i = 0 ; i < cols ; ++i)

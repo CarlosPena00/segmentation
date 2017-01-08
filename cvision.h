@@ -46,6 +46,7 @@ public:
     void getBrutalFrame(cv::Mat &src, cv::Mat &dst);
     void getFrame(cv::Mat &frame);
     void getFrame();
+    void setLimiar(int value);
     bool isInside(YUV p, Color q);
     int brutalForce(QColor p);
     int brutalForce(cv::Vec3b p);
@@ -67,8 +68,8 @@ private:
     cv::Mat src2;
     Color color[MAXCOLOR];
     YUV var;
-
     YUV myColor[1];//Mudar
+    int limiar = 500;
 
 };
 

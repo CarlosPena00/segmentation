@@ -39,9 +39,9 @@ MainWindow::~MainWindow()
 QColor MainWindow::displayShow(cv::Mat &frame, QPoint p)
 {
     cv::Size newSize(this->ui->labelDisplay->width(), this->ui->labelDisplay->height());
-    cv::resize(frame, frame, newSize);
-    cv::cvtColor(frame, frame, CV_BGR2RGB);
-    QImage qimg((uchar*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    cv::resize(frame, defaultDisplay, newSize);
+    cv::cvtColor(defaultDisplay, defaultDisplay, CV_BGR2RGB);
+    QImage qimg((uchar*)defaultDisplay.data, defaultDisplay.cols, defaultDisplay.rows, defaultDisplay.step, QImage::Format_RGB888);
     this->ui->labelDisplay->setPixmap(QPixmap::fromImage(qimg));
 
     QColor myrgb(qimg.pixel(p));
@@ -62,9 +62,8 @@ QColor MainWindow::displayShow(cv::Mat &frame, QPoint p)
 void MainWindow::displayShowNormal(cv::Mat &frame)
 {
     cv::Size newSize(this->ui->labelDisplayNormal->width(), this->ui->labelDisplayNormal->height());
-    cv::resize(frame, frame, newSize);
-    //cv::cvtColor(frame, frame, CV_BGR2RGB);
-    QImage qimg((uchar*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    cv::resize(frame, normalDisplay, newSize);
+    QImage qimg((uchar*)normalDisplay.data, normalDisplay.cols, normalDisplay.rows, normalDisplay.step, QImage::Format_RGB888);
     this->ui->labelDisplayNormal->setPixmap(QPixmap::fromImage(qimg));
 
 }
@@ -72,9 +71,8 @@ void MainWindow::displayShowNormal(cv::Mat &frame)
 void MainWindow::displayShowBrutal(cv::Mat &frame)
 {
     cv::Size newSize(this->ui->labelDisplayBrutal->width(), this->ui->labelDisplayBrutal->height());
-    cv::resize(frame, frame, newSize);
-    //cv::cvtColor(frame, frame, CV_BGR2RGB);
-    QImage qimg((uchar*)frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    cv::resize(frame, brutalForce, newSize);
+    QImage qimg((uchar*)brutalForce.data, brutalForce.cols, brutalForce.rows, brutalForce.step, QImage::Format_RGB888);
     this->ui->labelDisplayBrutal->setPixmap(QPixmap::fromImage(qimg));
 }
 
@@ -231,16 +229,23 @@ double MainWindow::distanceEucledian(QColor p, QColor q)
     return std::pow(p.red() - q.red(),2) + std::pow(p.blue() - q.blue(),2) + std::pow(p.green() - q.green(),2) ;
 }
 
+void MainWindow::getLimiar(int* value)
+{
+    *value = ui->labelValue->text().toInt();
+}
+
 
 
 
 
 void MainWindow::updateAndDraw(){
     cvision->getFrame(src);
-    cvision->getFrame(dst);
+    getLimiar(&limiar);
 
-    cvision->getNormalFrame(src,dst);
+    src.copyTo(dst);
     dst.copyTo(brutalForce);
+    cvision->getNormalFrame(src,dst);
+
     this->pos = getPosition();
     rgb = displayShow(src,this->pos);
     displayCte();
@@ -254,4 +259,10 @@ void MainWindow::updateAndDraw(){
     cvision->getBrutalFrame(brutalForce,brutalForce);
     displayShowBrutal(brutalForce);
 
+
+}
+
+void MainWindow::on_verticalSlider_valueChanged(int value)
+{
+    ui->labelValue->setText(QString::number(value));
 }
