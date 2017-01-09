@@ -274,3 +274,10 @@ void MainWindow::on_verticalSlider_valueChanged(int value)
 {
     ui->labelValue->setText(QString::number(value));
 }
+
+void MainWindow::on_pushButton_released()
+{
+    cvision->setLimiar(this->limiar);
+    std::cout<<limiar<<std::endl;
+    cvision->setLutBrutal();
+}

@@ -49,6 +49,7 @@ public:
     void getFrame(cv::Mat &frame);
     void getFrame();
     void setLimiar(int value);
+    void setLutBrutal();
     bool isInside(YUV p, Color q);
     int brutalForce(QColor p);
     int brutalForce(cv::Vec3b p);

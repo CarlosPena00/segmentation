@@ -108,6 +108,12 @@ void Cvision::setLimiar(int value)
     this->limiar = value;
 }
 
+void Cvision::setLutBrutal()
+{
+    delete[] this->lutBrutal;
+    this->lutBrutal = initLutBrutal();
+}
+
 bool Cvision::isInside(YUV p, Color q)
 {
 
@@ -175,7 +181,7 @@ int Cvision::normalForce(YUV px)
 }
 int Cvision::vectorDist(YUV p)
 {
-   int finalIndex=-1;
+   int finalIndex=0;
    double minDist = 999999999;
 
     for(int i = 0 ; i < MAXCOLOR ; i++){
@@ -186,7 +192,7 @@ int Cvision::vectorDist(YUV p)
             p.dist[i] = 0;
         }else{
             p.dist[i] = surfaceDistance(p, color[i]);
-            if(minDist > p.dist[i]){
+            if(minDist > p.dist[i] && p.dist[i] <= limiar){
                 minDist = p.dist[i];
                 finalIndex = i;
             }

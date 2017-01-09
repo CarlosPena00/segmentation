@@ -49,6 +49,8 @@ public:
 private slots:
     void on_verticalSlider_valueChanged(int value);
 
+    void on_pushButton_released();
+
 private:
     std::string carlos  ="/home/kaka/Desktop/RC/video4.avi";
 
