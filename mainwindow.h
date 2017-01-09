@@ -7,6 +7,7 @@
 #include "cvision.h"
 #include <cstdlib>
 #include <cstring>
+#include <QTime>
 
 #ifndef MAXCOLOR
 #define MAXCOLOR 10
@@ -65,6 +66,9 @@ private:
     QColor cor[11];
     QColor rgb;
     ColorDist* colorDist;
+    QTime timer,timerLut;
+    double tTimeCont=0.0,tTimeContLut =0.0;
+    int tTimeInt=0, tTimeIntLut=0;
     int limiar = 500;
 
 };

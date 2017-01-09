@@ -34,29 +34,34 @@ typedef struct Color{
 class Cvision
 {
 public:
+    Cvision(int index);
+    Cvision(std::string);
     RGB* YUVtoRGB(YUV p);
     YUV* RGBtoYUV(RGB p);
     void BGRtoYUV(cv::Vec3b p, int *y, int *u, int *v);
     void RGBtoYUV(cv::Vec3b p, int *y, int *u, int *v);
-    Cvision(int index);
-    Cvision(std::string);
     void setup();
     void getYUV();
     void getNormalFrame(cv::Mat &src, cv::Mat &dst);
+    void getNormalFrameLut(cv::Mat &src, cv::Mat &dst);
     void getBrutalFrame(cv::Mat &src, cv::Mat &dst);
+    void getBrutalFrameLut(cv::Mat &src, cv::Mat &dst);
     void getFrame(cv::Mat &frame);
     void getFrame();
     void setLimiar(int value);
     bool isInside(YUV p, Color q);
     int brutalForce(QColor p);
     int brutalForce(cv::Vec3b p);
+    int brutalForce(YUV p);
     int normalForce(QColor p);
     int normalForce(YUV px);
+    int vectorDist(YUV p);
+    int debug(QColor p);
     double surfaceDistance(YUV p, Color q);
     double planDistance(int minPlano, int maxPlano);
     double absDistance(YUV p, YUV q);
-    int vectorDist(YUV p);
-    int debug(QColor p);
+    int* initLutNormal();
+    int* initLutBrutal();
 private:
     std::string url;
     std::string carlos="/home/kaka/Desktop/RC/video4.avi";
@@ -70,6 +75,8 @@ private:
     YUV var;
     YUV myColor[1];//Mudar
     int limiar = 500;
+    int* lutNormal;
+    int* lutBrutal;
 
 };
 

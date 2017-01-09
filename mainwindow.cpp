@@ -234,17 +234,25 @@ void MainWindow::getLimiar(int* value)
     *value = ui->labelValue->text().toInt();
 }
 
-
-
-
-
+/*
+    QTime myTimer;
+    myTimer.start();
+    tTimeCont += myTimer.elapsed();
+    tTimeInt +=1;
+    if(tTimeInt/100 && this->booleanShowFps){
+        std::cout<<"My Time : "<<(double)tTimeCont/(double)tTimeInt<<std::endl;
+        tTimeCont = 0.0;
+        tTimeInt = 0;
+    }
+*/
 void MainWindow::updateAndDraw(){
     cvision->getFrame(src);
     getLimiar(&limiar);
 
     src.copyTo(dst);
     dst.copyTo(brutalForce);
-    cvision->getNormalFrame(src,dst);
+    cvision->getNormalFrameLut(src,dst);
+    cvision->getBrutalFrameLut(brutalForce,brutalForce);
 
     this->pos = getPosition();
     rgb = displayShow(src,this->pos);
@@ -256,7 +264,7 @@ void MainWindow::updateAndDraw(){
     displayChooseOneNormalF(normalF);
     displayShowNormal(dst);
 
-    cvision->getBrutalFrame(brutalForce,brutalForce);
+
     displayShowBrutal(brutalForce);
 
 

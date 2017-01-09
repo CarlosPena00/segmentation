@@ -76,8 +76,10 @@ void Cvision::setup()
     this->cor[8] = cv::Vec3b(138,043,226);
     this->cor[9] = cv::Vec3b(107,66,38);
     this->cor[10] = cv::Vec3b(255,255,255);
-
     getYUV();
+
+    lutNormal = initLutNormal();
+    lutBrutal = initLutBrutal();
 
 }
 
@@ -132,6 +134,11 @@ int Cvision::brutalForce(cv::Vec3b p)
     YUV px[1];
     BGRtoYUV(p,&px[0].y,&px[0].u,&px[0].v);
     return vectorDist(px[0]);
+}
+
+int Cvision::brutalForce(YUV p)
+{
+     return vectorDist(p);
 }
 
 int Cvision::normalForce(QColor p)
@@ -201,6 +208,70 @@ int Cvision::debug(QColor p)
     YUV *px;
     px = RGBtoYUV(var);
     return vectorDist(px[0]);
+
+}
+
+int *Cvision::initLutNormal()
+{
+    int *LUT = new int[16777216];
+    if(LUT == NULL){std::cout<<"Erro de alocação de memoria InitLut"<<std::endl;exit(1);}
+    int index = 0;
+    int R,G,B;
+    YUV p;
+    for( R = 0 ; R < 255 ; ++R)
+    {
+        for(G = 0 ; G < 255 ; ++G)
+        {
+            for(B = 0 ; B < 255 ; ++B)
+            {
+                index = R*65536 + G*256 + B;
+                p.y = (299*R + 587*G + 114*B + 500)/1000;
+                p.u = (492 * (B-p.y) + 128000)/1000;
+                p.v = (877 * (R-p.y) + 128000)/1000;
+
+                // Index the colors
+                index = R*65536 + G*256 + B;
+
+                // Detect the colors based in a range in the YUV space
+                LUT[index] = normalForce(p);
+            }
+        }
+
+    }
+    return LUT;
+
+
+}
+
+int *Cvision::initLutBrutal()
+{
+    int *LUT = new int[16777216];
+    if(LUT == NULL){std::cout<<"Erro de alocação de memoria InitLut"<<std::endl;exit(1);}
+    int index = 0;
+    int R,G,B;
+    YUV p;
+    for( R = 0 ; R < 255 ; ++R)
+    {
+        for(G = 0 ; G < 255 ; ++G)
+        {
+            for(B = 0 ; B < 255 ; ++B)
+            {
+                index = R*65536 + G*256 + B;
+                p.y = (299*R + 587*G + 114*B + 500)/1000;
+                p.u = (492 * (B-p.y) + 128000)/1000;
+                p.v = (877 * (R-p.y) + 128000)/1000;
+
+                // Index the colors
+                index = R*65536 + G*256 + B;
+
+                // Detect the colors based in a range in the YUV space
+                LUT[index] = brutalForce(p);
+            }
+        }
+
+    }
+    return LUT;
+
 
 }
 double Cvision::surfaceDistance(YUV p, Color q)
@@ -324,11 +395,31 @@ void Cvision::getNormalFrame(cv::Mat &src, cv::Mat &dst)
 
 }
 
+void Cvision::getNormalFrameLut(cv::Mat &src, cv::Mat &dst)
+{
+    int cols = src.cols;
+    int rows = src.rows;
+    int i,j;cv::Vec3b var;int index;
+    for(j = 0 ; j < rows ; ++j)
+    {
+
+        for(i = 0 ; i < cols ; ++i)
+        {
+            var = src.at<cv::Vec3b>(j,i);
+            index = lutNormal[var.val[2]*65536 + var.val[1]*256 + var.val[0]];
+            dst.at<cv::Vec3b>(j,i) = this->cor[index];
+        }
+
+    }
+
+
+}
+
 void Cvision::getBrutalFrame(cv::Mat &src, cv::Mat &dst)
 {
     int cols = src.cols;
     int rows = src.rows;
-    cv::Vec3b tempvar;int var;
+    cv::Vec3b tempvar;
     for(int j = 0 ; j < rows ; ++j)
     {
         for(int i = 0 ; i < cols ; ++i)
@@ -339,4 +430,22 @@ void Cvision::getBrutalFrame(cv::Mat &src, cv::Mat &dst)
             }
         }
     }
+}
+
+void Cvision::getBrutalFrameLut(cv::Mat &src, cv::Mat &dst)
+{
+    int cols = src.cols;
+     int rows = src.rows;
+     cv::Vec3b var;int index;
+     for(int j = 0 ; j < rows ; ++j)
+     {
+         for(int i = 0 ; i < cols ; ++i)
+         {
+             var = src.at<cv::Vec3b>(j,i);
+             index = lutBrutal[var.val[2]*65536 + var.val[1]*256 + var.val[0]];
+             dst.at<cv::Vec3b>(j,i) = this->cor[index];
+
+         }
+     }
+
 }
