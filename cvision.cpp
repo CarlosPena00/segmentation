@@ -183,7 +183,6 @@ int Cvision::vectorDist(YUV p)
 {
    int finalIndex=0;
    double minDist = 999999999;
-
     for(int i = 0 ; i < MAXCOLOR ; i++){
 
         if(isInside(p,color[i])){
